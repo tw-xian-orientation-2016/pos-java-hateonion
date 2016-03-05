@@ -48,4 +48,26 @@ public class Pos {
     }
 
 
+    public List<ReceiptItem> generateReceiptItems(List<CartItem> cartItems) {
+        List<ReceiptItem> receiptItems = new ArrayList<>();
+        Promotion []promotions = Fixture.loadPromotions();
+
+
+        for(CartItem cartItem : cartItems) {
+            double save = 0;
+            for(Promotion promotion : promotions) {
+                for(String barcode : promotion.barcodes) {
+                    if(barcode == cartItem.item.barcode) {
+                        save = cartItem.count / 3 * cartItem.item.price;
+                        break;
+                    }
+                }
+            }
+            double total = cartItem.item.price * cartItem.count;
+            ReceiptItem receiptItem = new ReceiptItem(cartItem, total, save);
+            receiptItems.add(receiptItem);
+        }
+
+        return receiptItems;
+    }
 }

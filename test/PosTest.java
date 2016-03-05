@@ -1,28 +1,14 @@
 import org.junit.Before;
 import org.junit.Test;
-import sun.util.resources.cldr.ms.CalendarData_ms_MY;
 
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class PosTest {
 
     private Pos pos;
-    private String[] input = {
-            "ITEM000001",
-            "ITEM000001",
-            "ITEM000001",
-            "ITEM000001",
-            "ITEM000001",
-            "ITEM000003-2",
-            "ITEM000005",
-            "ITEM000005",
-            "ITEM000005"
-    };
 
     @Before
     public void init() {
@@ -31,6 +17,18 @@ public class PosTest {
 
     @Test
     public void should_return_tags() {
+        String[] input = {
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000003-2",
+                "ITEM000005",
+                "ITEM000005",
+                "ITEM000005"
+        };
+
         HashMap settedTags = new HashMap();
         settedTags.put("ITEM000001", 5);
         settedTags.put("ITEM000003", 2);
@@ -68,6 +66,38 @@ public class PosTest {
             assertThat(currentMyCartItem.item.name, is(currentSettedCartItem.item.name));
             assertThat(currentMyCartItem.item.price, is(currentSettedCartItem.item.price));
             assertThat(currentMyCartItem.item.unit, is(currentSettedCartItem.item.unit));
+        }
+    }
+
+    @Test
+    public void should_return_receiptItems() {
+        Item []allItems = Fixture.loadAllItems();
+
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(new CartItem(5, allItems[1]));
+        cartItems.add(new CartItem(2, allItems[3]));
+        cartItems.add(new CartItem(3, allItems[5]));
+
+        List<ReceiptItem> settedReceiptItems = new ArrayList<>();
+        settedReceiptItems.add(new ReceiptItem(cartItems.get(0), 15, 3));
+        settedReceiptItems.add(new ReceiptItem(cartItems.get(1), 30, 0));
+        settedReceiptItems.add(new ReceiptItem(cartItems.get(2), 13.5, 4.5));
+
+        List<ReceiptItem> myReceiptItems = pos.generateReceiptItems(cartItems);
+
+        assertTrue(myReceiptItems.size() == settedReceiptItems.size());
+
+        for(int i = 0; i < settedReceiptItems.size(); i++) {
+            ReceiptItem currentMyItem = myReceiptItems.get(i);
+            ReceiptItem currentSettedItem = settedReceiptItems.get(i);
+
+            assertThat(currentMyItem.total, is(currentSettedItem.total));
+            assertThat(currentMyItem.save, is(currentSettedItem.save));
+            assertThat(currentMyItem.cartItem.count, is(currentSettedItem.cartItem.count));
+            assertThat(currentMyItem.cartItem.item.name, is(currentSettedItem.cartItem.item.name));
+            assertThat(currentMyItem.cartItem.item.unit, is(currentSettedItem.cartItem.item.unit));
+            assertThat(currentMyItem.cartItem.item.barcode, is(currentSettedItem.cartItem.item.barcode));
+            assertThat(currentMyItem.cartItem.item.price, is(currentSettedItem.cartItem.item.price));
         }
     }
 }

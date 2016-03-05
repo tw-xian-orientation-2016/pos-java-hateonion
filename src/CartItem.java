@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 public class CartItem {
     Item item = new Item();
     int count;
