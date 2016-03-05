@@ -12,7 +12,8 @@ public class Pos {
 
         for (String item : input) {
             String[] current = item.split("-");
-            if (tags.containsKey(current[0])) {
+            boolean hasThisItemAlready = tags.containsKey(current[0]);
+            if (hasThisItemAlready) {
                 if (current.length > 1) {
                     count = parseInt(current[1]) + parseInt((tags.get(current[0])).toString());
                     tags.remove(current[0]);
@@ -39,8 +40,10 @@ public class Pos {
         List<CartItem> cartItems = new ArrayList<>();
 
         for(int i = 0; i < allItems.length; i++) {
-            if(tags.containsKey(allItems[i].barcode)) {
-                CartItem cartItem = new CartItem(parseInt(tags.get(allItems[i].barcode).toString()), allItems[i]);
+            boolean hasMatchedItem = tags.containsKey(allItems[i].barcode);
+            if(hasMatchedItem) {
+                int count = parseInt(tags.get(allItems[i].barcode).toString());
+                CartItem cartItem = new CartItem(count, allItems[i]);
                 cartItems.add(cartItem);
             }
         }
@@ -57,7 +60,8 @@ public class Pos {
             double save = 0;
             for(Promotion promotion : promotions) {
                 for(String barcode : promotion.barcodes) {
-                    if(barcode == cartItem.item.barcode) {
+                    boolean thisItemIsInPromotion = barcode == cartItem.item.barcode ? true : false;
+                    if(thisItemIsInPromotion) {
                         save = cartItem.count / 3 * cartItem.item.price;
                         break;
                     }
