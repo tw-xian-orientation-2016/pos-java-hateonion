@@ -10,4 +10,19 @@ public class Fixture {
         Promotion []promotions = {new Promotion("Buy Two Get One Free",barcodes)};
         return promotions;
     }
+
+    public static String [] getInput() {
+        String[] input = {
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000001",
+                "ITEM000003-2",
+                "ITEM000005",
+                "ITEM000005",
+                "ITEM000005"
+        };
+        return input;
+    }
 }

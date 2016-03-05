@@ -88,4 +88,13 @@ public class Pos {
 
         System.out.print(receipt);
     }
+
+    public void posPrint() {
+        Pos pos = new Pos();
+        String [] input = Fixture.getInput();
+        HashMap tags = pos.generateTags(input);
+        List<CartItem> cartItems = pos.generateCartItems(tags);
+        List<ReceiptItem> receiptItems = pos.generateReceiptItems(cartItems);
+        pos.printRecipt(receiptItems);
+    }
 }
