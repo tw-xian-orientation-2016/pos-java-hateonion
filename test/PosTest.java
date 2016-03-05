@@ -1,10 +1,12 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.PrintStream;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class PosTest {
 
@@ -99,5 +101,35 @@ public class PosTest {
             assertThat(currentMyItem.cartItem.item.barcode, is(currentSettedItem.cartItem.item.barcode));
             assertThat(currentMyItem.cartItem.item.price, is(currentSettedItem.cartItem.item.price));
         }
+    }
+
+    @Test
+    public void should_print_correct_content() {
+        List<ReceiptItem> receiptItems = new ArrayList<>();
+        Item []allItems = Fixture.loadAllItems();
+
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(new CartItem(5, allItems[1]));
+        cartItems.add(new CartItem(2, allItems[3]));
+        cartItems.add(new CartItem(3, allItems[5]));
+
+        receiptItems.add(new ReceiptItem(cartItems.get(0), 15, 3));
+        receiptItems.add(new ReceiptItem(cartItems.get(1), 30, 0));
+        receiptItems.add(new ReceiptItem(cartItems.get(2), 13.5, 4.5));
+
+        PrintStream mockedPrintStream = mock(PrintStream.class);
+        System.setOut(mockedPrintStream);
+        String expectedContent =
+                "***<没钱赚商店>收据***\n" +
+                "名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n" +
+                "名称：荔枝，数量：2斤，单价：15.00(元)，小计：30.00(元)\n" +
+                "名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)\n" +
+                "----------------------\n" +
+                "总计：51.00(元)\n" +
+                "节省：7.50(元)\n" +
+                "**********************";
+        pos.printRecipt(receiptItems);
+        verify(mockedPrintStream).print(expectedContent);
+
     }
 }
