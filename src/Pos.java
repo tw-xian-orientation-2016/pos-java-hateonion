@@ -1,7 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.List;
 
-import static java.lang.Integer.compareUnsigned;
 import static java.lang.Integer.parseInt;
 
 public class Pos {
@@ -32,4 +32,20 @@ public class Pos {
         }
         return tags;
     }
+
+    public List<CartItem> generateCartItems(HashMap tags) {
+
+        Item []allItems = Fixture.loadAllItems();
+        List<CartItem> cartItems = new ArrayList<>();
+
+        for(int i = 0; i < allItems.length; i++) {
+            if(tags.containsKey(allItems[i].barcode)) {
+                CartItem cartItem = new CartItem(parseInt(tags.get(allItems[i].barcode).toString()), allItems[i]);
+                cartItems.add(cartItem);
+            }
+        }
+        return cartItems;
+    }
+
+
 }
